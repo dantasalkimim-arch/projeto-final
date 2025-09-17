@@ -1,74 +1,99 @@
-// Verifica se o email já existe
+const LS_KEYS = {
+  USERS: "usuarios",
+  TOKEN: "token",
+  USER: "usuarioLogado",
+  NEW_EMAIL: "novoEmail",
+  LOGIN_HINT: "loginHintEmail",
+};
+
+const normalizeEmail = (e) => (e || "").trim().toLowerCase();
+const norm = (s) => (s || "").trim();
+
+const getUsers = () => JSON.parse(localStorage.getItem(LS_KEYS.USERS)) || [];
+const setUsers = (list) => localStorage.setItem(LS_KEYS.USERS, JSON.stringify(list));
+
 function verificarEmail() {
-  const email = document.getElementById("email").value;
-  const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  const rawEmail = document.getElementById("email")?.value;
+  const email = normalizeEmail(rawEmail);
 
-  const usuarioExiste = usuarios.find(u => u.email === email);
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    alert("Digite um e-mail válido.");
+    return;
+  }
 
-  if (usuarioExiste) {
-    // Redireciona para login
+  const users = getUsers();
+  const existe = users.find((u) => normalizeEmail(u.email) === email);
+
+  if (existe) {
+    localStorage.setItem(LS_KEYS.LOGIN_HINT, email);
     window.location.href = "login.html";
   } else {
-    // Redireciona para cadastro
-    localStorage.setItem("novoEmail", email); // salva email para usar no cadastro
+    localStorage.setItem(LS_KEYS.NEW_EMAIL, email);
     window.location.href = "cadastro.html";
   }
 }
 
-// Evento de cadastro
-const formCadastro = document.getElementById("formCadastro");
-if (formCadastro) {
-  const emailSalvo = localStorage.getItem("novoEmail");
-  if (emailSalvo) document.getElementById("cadastroEmail").value = emailSalvo;
+function cadastrarUsuario() {
+  const emailFromLS = localStorage.getItem(LS_KEYS.NEW_EMAIL);
+  const email = normalizeEmail(emailFromLS || document.getElementById("email")?.value);
 
-  formCadastro.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const usuario = {
-      email: document.getElementById("cadastroEmail").value,
-      nome: document.getElementById("nome").value,
-      telefone: document.getElementById("telefone").value,
-      endereco: document.getElementById("endereco").value,
-      cpf: document.getElementById("cpf").value,
-      senha: document.getElementById("senha").value
-    };
+  const nome = norm(document.getElementById("nome")?.value);
+  const telefone = norm(document.getElementById("telefone")?.value);
+  const endereco = norm(document.getElementById("endereco")?.value);
+  const cpf = norm(document.getElementById("cpf")?.value);
+  const senha = norm(document.getElementById("senha")?.value);
 
-    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-    usuarios.push(usuario);
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  if (!/\S+@\S+\.\S+/.test(email)) return alert("E-mail inválido.");
+  if (nome.length < 3) return alert("O nome deve ter pelo menos 3 caracteres.");
+  if (senha.length < 8) return alert("A senha deve ter pelo menos 8 caracteres.");
 
-    alert("Cadastro realizado com sucesso!");
+  const users = getUsers();
+  const duplicado = users.some((u) => normalizeEmail(u.email) === email);
+  if (duplicado) {
+    alert("Este e-mail já está cadastrado. Faça login.");
+    localStorage.setItem(LS_KEYS.LOGIN_HINT, email);
     window.location.href = "login.html";
-  });
+    return;
+  }
+
+  users.push({ email, nome, telefone, endereco, cpf, senha });
+  setUsers(users);
+
+  localStorage.removeItem(LS_KEYS.NEW_EMAIL);
+  alert("Usuário cadastrado com sucesso!");
+  window.location.href = "login.html";
 }
 
-// Evento de login
-const formLogin = document.getElementById("formLogin");
-if (formLogin) {
-  formLogin.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("loginEmail").value;
-    const senha = document.getElementById("loginSenha").value;
+function loginUsuario() {
+  const email = normalizeEmail(document.getElementById("loginEmail")?.value);
+  const senha = norm(document.getElementById("loginSenha")?.value);
 
-    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+  const users = getUsers();
+  const usuario = users.find(
+    (u) => normalizeEmail(u.email) === email && norm(u.senha) === senha
+  );
 
-    if (usuario) {
-      localStorage.setItem("token", "abc123"); // token fake
-      localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
-      window.location.href = "perfil.html";
-    } else {
-      alert("Email ou senha inválidos!");
-    }
-  });
+  if (!usuario) {
+    alert("E-mail ou senha inválidos.");
+    return;
+  }
+
+  const token = "token_" + Date.now();
+  localStorage.setItem(LS_KEYS.TOKEN, token);
+  localStorage.setItem(LS_KEYS.USER, JSON.stringify(usuario));
+  window.location.href = "perfil.html";
 }
 
-// Perfil do usuário
-if (window.location.pathname.includes("perfil.html")) {
-  const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+function carregarPerfil() {
+  const usuario = JSON.parse(localStorage.getItem(LS_KEYS.USER));
   if (!usuario) {
     window.location.href = "index.html";
-  } else {
-    document.getElementById("dadosUsuario").innerHTML = `
+    return;
+  }
+
+  const div = document.getElementById("dadosUsuario");
+  if (div) {
+    div.innerHTML = `
       <p><strong>Nome:</strong> ${usuario.nome}</p>
       <p><strong>Email:</strong> ${usuario.email}</p>
       <p><strong>Telefone:</strong> ${usuario.telefone}</p>
@@ -79,7 +104,24 @@ if (window.location.pathname.includes("perfil.html")) {
 }
 
 function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("usuarioLogado");
+  localStorage.removeItem(LS_KEYS.TOKEN);
+  localStorage.removeItem(LS_KEYS.USER);
   window.location.href = "index.html";
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname.includes("cadastro.html")) {
+    const emailEl = document.getElementById("email");
+    const saved = localStorage.getItem(LS_KEYS.NEW_EMAIL);
+    if (emailEl && saved) {
+      emailEl.value = saved;
+      emailEl.readOnly = true;
+    }
+  }
+
+  if (window.location.pathname.includes("login.html")) {
+    const loginEmail = document.getElementById("loginEmail");
+    const hint = localStorage.getItem(LS_KEYS.LOGIN_HINT);
+    if (loginEmail && hint) loginEmail.value = hint;
+  }
+});
