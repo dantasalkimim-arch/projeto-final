@@ -3,21 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Login</h1>
-
-  <form id="formLogin">
-    <label>Email:</label>
-    <input type="email" id="loginEmail" required><br>
+  <form id="loginForm">
+    <label>CPF ou E-mail:</label>
+    <input type="text" id="loginId" required><br>
 
     <label>Senha:</label>
     <input type="password" id="loginSenha" required><br>
 
-    <button type="button" onclick="loginUsuario()">Entrar</button>
+    <button type="button" onclick="fazerLogin()">Entrar</button>
   </form>
+
+  <p><a href="index.html">Voltar ao Cadastro</a></p>
 
   <script src="js/main.js"></script>
 </body>
 </html>
+
