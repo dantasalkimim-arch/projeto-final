@@ -1,4 +1,4 @@
-function getDadosFormulario() {
+function getFormData() {
   return {
     nome: document.getElementById("nome")?.value || "",
     cpf: document.getElementById("cpf")?.value || "",
@@ -9,106 +9,88 @@ function getDadosFormulario() {
   };
 }
 
+function upsertUsuario(u) {
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  const i = usuarios.findIndex(x => x.cpf === u.cpf || (u.email && x.email === u.email));
+  if (i >= 0) usuarios[i] = u; else usuarios.push(u);
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+}
+
 function salvarSession() {
-  const dados = getDadosFormulario();
-  sessionStorage.setItem("usuario", JSON.stringify(dados));
+  const u = getFormData();
+  sessionStorage.setItem("usuario", JSON.stringify(u));
   alert("Dados salvos na Session Storage!");
 }
 
 function salvarLocal() {
-  const dados = getDadosFormulario();
-  localStorage.setItem("usuario", JSON.stringify(dados));
+  const u = getFormData();
+  localStorage.setItem("usuario", JSON.stringify(u));
+  upsertUsuario(u);
   alert("Dados salvos na Local Storage!");
 }
 
 function baixarJSON() {
-  const dados = getDadosFormulario();
-  const blob = new Blob([JSON.stringify(dados, null, 2)], { type: "application/json" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "dados.json";
-  link.click();
+  const u = getFormData();
+  const blob = new Blob([JSON.stringify(u, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "usuario.json";
+  a.click();
 }
 
-function fazerLogin() {
-  const loginId = document.getElementById("loginId").value;
-  const loginSenha = document.getElementById("loginSenha").value;
+function login(event) {
+  event.preventDefault();
 
-  const usuario = JSON.parse(localStorage.getItem("usuario")) || 
-                  JSON.parse(sessionStorage.getItem("usuario"));
+  const cpfEmail = document.getElementById("cpfEmail").value;
+  const senha = document.getElementById("loginSenha").value;
 
-  if (usuario && (usuario.email === loginId || usuario.cpf === loginId) && usuario.senha === loginSenha) {
-    alert("Login realizado com sucesso!");
-    window.location.href = "pokemon.html"; 
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  const usuarioValido = usuarios.find(u =>
+    (u.email === cpfEmail || u.cpf === cpfEmail) && u.senha === senha
+  );
+
+  if (usuarioValido) {
+    localStorage.setItem("logado", JSON.stringify(usuarioValido));
+    window.location.href = "pokemon.html";
   } else {
-    alert("Usuário ou senha inválidos!");
+    alert("CPF/E-mail ou senha incorretos!");
   }
 }
 
-let pagina = 1;
-const limite = 20;
-
-async function carregarPokemons(p) {
-  if (p < 1) return;
-  pagina = p;
-  const offset = (pagina - 1) * limite;
-  const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limite}`;
-  const resp = await fetch(url);
-  const data = await resp.json();
-
-  const lista = document.getElementById("pokemonList");
-  lista.innerHTML = "";
-
-  for (const poke of data.results) {
-    const res = await fetch(poke.url);
-    const detalhes = await res.json();
-
-    const card = document.createElement("div");
-    card.className = "pokemon-card";
-    card.style.backgroundColor = pegarCorPorTipo(detalhes.types[0].type.name);
-
-    card.innerHTML = `
-      <h3>${detalhes.name}</h3>
-      <img src="${detalhes.sprites.front_default}" alt="${detalhes.name}">
-    `;
-    lista.appendChild(card);
-  }
-}
-
-function pegarCorPorTipo(tipo) {
-  const cores = {
-    grass: "#78C850",
-    fire: "#F08030",
-    water: "#6890F0",
-    electric: "#F8D030",
-    bug: "#A8B820",
-    normal: "#A8A878",
-    poison: "#A040A0",
-    ground: "#E0C068",
-    fairy: "#EE99AC",
-    psychic: "#F85888"
-  };
-  return cores[tipo] || "#ccc";
+function logout() {
+  sessionStorage.removeItem("logado");
+  sessionStorage.removeItem("usuarioLogado");
+  window.location.href = "login.html";
 }
 
 function verificarLogin() {
-  const usuario = JSON.parse(localStorage.getItem("usuario")) || 
-                  JSON.parse(sessionStorage.getItem("usuario"));
-
-  if (!usuario) {
-    alert("Você precisa estar logado para acessar esta página!");
+  if (!sessionStorage.getItem("logado")) {
     window.location.href = "login.html";
   }
 }
 
-if (document.getElementById("pokemonList")) {
-  verificarLogin();
-  carregarPokemons(pagina);
-}
+async function carregarPokemons() {
+  try {
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000"); 
+    const data = await response.json();
 
-function logout() {
-  sessionStorage.removeItem("usuario");
-  localStorage.removeItem("usuario");
-  alert("Você saiu do sistema!");
-  window.location.href = "login.html";
+    const container = document.getElementById("pokemonList");
+    container.innerHTML = "";
+
+    for (const pokemon of data.results) {
+      const res = await fetch(pokemon.url);
+      const pokeData = await res.json();
+
+      const div = document.createElement("div");
+      div.classList.add("pokemon-card");
+      div.innerHTML = `
+        <img src="${pokeData.sprites.front_default}" alt="${pokeData.name}">
+        <h3>${pokeData.name}</h3>
+      `;
+      container.appendChild(div);
+    }
+  } catch (error) {
+    console.error("Erro ao carregar Pokémons:", error);
+  }
 }
