@@ -10,7 +10,7 @@
 <body>
   <h1>Cadastro</h1>
 
-  <form>
+  <form onsubmit="cadastrar(event)">
     <label for="nome">Nome:</label>
     <input type="text" id="nome" required>
 
@@ -29,9 +29,7 @@
     <label for="senha">Senha:</label>
     <input type="password" id="senha" required>
 
-    <button type="button" onclick="salvarSession()">Salvar Session</button>
-    <button type="button" onclick="salvarLocal()">Salvar Local</button>
-    <button type="button" onclick="baixarJSON()">Baixar JSON</button>
+    <button type="submit">Cadastrar</button>
     <button type="button" onclick="window.location.href='login.html'">Ir para Login</button>
   </form>
 </body>

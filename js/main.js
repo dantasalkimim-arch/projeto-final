@@ -9,88 +9,69 @@ function getFormData() {
   };
 }
 
-function upsertUsuario(u) {
+function cadastrarUsuario(event) {
+  event.preventDefault();
+  const u = getFormData();
+
   let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-  const i = usuarios.findIndex(x => x.cpf === u.cpf || (u.email && x.email === u.email));
-  if (i >= 0) usuarios[i] = u; else usuarios.push(u);
+  const existe = usuarios.find(x => x.email === u.email);
+
+  if (existe) {
+    alert("Já existe um usuário com este e-mail!");
+    return;
+  }
+
+  usuarios.push(u);
   localStorage.setItem("usuarios", JSON.stringify(usuarios));
-}
-
-function salvarSession() {
-  const u = getFormData();
-  sessionStorage.setItem("usuario", JSON.stringify(u));
-  alert("Dados salvos na Session Storage!");
-}
-
-function salvarLocal() {
-  const u = getFormData();
-  localStorage.setItem("usuario", JSON.stringify(u));
-  upsertUsuario(u);
-  alert("Dados salvos na Local Storage!");
-}
-
-function baixarJSON() {
-  const u = getFormData();
-  const blob = new Blob([JSON.stringify(u, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "usuario.json";
-  a.click();
+  alert("Cadastro realizado com sucesso!");
+  window.location.href = "login.html";
 }
 
 function login(event) {
   event.preventDefault();
 
-  const cpfEmail = document.getElementById("cpfEmail").value;
+  const email = document.getElementById("loginEmail").value;
   const senha = document.getElementById("loginSenha").value;
 
   let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-  const usuarioValido = usuarios.find(u =>
-    (u.email === cpfEmail || u.cpf === cpfEmail) && u.senha === senha
-  );
+  const usuarioValido = usuarios.find(u => u.email === email && u.senha === senha);
 
   if (usuarioValido) {
     localStorage.setItem("logado", JSON.stringify(usuarioValido));
     window.location.href = "pokemon.html";
   } else {
-    alert("CPF/E-mail ou senha incorretos!");
+    alert("E-mail ou senha incorretos!");
   }
 }
 
 function logout() {
-  sessionStorage.removeItem("logado");
-  sessionStorage.removeItem("usuarioLogado");
+  localStorage.removeItem("logado");
   window.location.href = "login.html";
 }
 
 function verificarLogin() {
-  if (!sessionStorage.getItem("logado")) {
+  if (!localStorage.getItem("logado")) {
     window.location.href = "login.html";
   }
 }
 
 async function carregarPokemons() {
-  try {
-    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000"); 
-    const data = await response.json();
+  const lista = document.getElementById("pokemonList");
+  lista.innerHTML = "";
 
-    const container = document.getElementById("pokemonList");
-    container.innerHTML = "";
+  const resposta = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10000");
+  const dados = await resposta.json();
 
-    for (const pokemon of data.results) {
-      const res = await fetch(pokemon.url);
-      const pokeData = await res.json();
+  for (let p of dados.results) {
+    const r = await fetch(p.url);
+    const poke = await r.json();
 
-      const div = document.createElement("div");
-      div.classList.add("pokemon-card");
-      div.innerHTML = `
-        <img src="${pokeData.sprites.front_default}" alt="${pokeData.name}">
-        <h3>${pokeData.name}</h3>
-      `;
-      container.appendChild(div);
-    }
-  } catch (error) {
-    console.error("Erro ao carregar Pokémons:", error);
+    const item = document.createElement("div");
+    item.innerHTML = `
+      <p>${poke.name}</p>
+      <img src="${poke.sprites.front_default}" alt="${poke.name}">
+    `;
+    lista.appendChild(item);
   }
 }

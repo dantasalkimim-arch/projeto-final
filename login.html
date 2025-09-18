@@ -8,20 +8,24 @@
   <script src="js/main.js" defer></script>
 </head>
 <body>
-  <h1>Login</h1>
+  <div class="form-container">
+    <h1>Login</h1>
 
-  <form onsubmit="login(event)">
-    <label for="cpfEmail">CPF ou E-mail:</label>
-    <input type="text" id="cpfEmail" required>
+    <form onsubmit="login(event)">
+      <label for="loginEmail">E-mail:</label>
+      <input type="email" id="loginEmail" required>
 
-    <label for="loginSenha">Senha:</label>
-    <input type="password" id="loginSenha" required>
+      <label for="loginSenha">Senha:</label>
+      <input type="password" id="loginSenha" required>
 
-    <button type="submit">Entrar</button>
-    <button type="button" onclick="window.location.href='cadastro.html'">Ir para Cadastro</button>
-  </form>
+      <button type="submit">Entrar</button>
+      <button type="button" onclick="window.location.href='cadastro.html'">Ir para Cadastro</button>
+    </form>
+  </div>
 </body>
 </html>
+
+
 
 
 

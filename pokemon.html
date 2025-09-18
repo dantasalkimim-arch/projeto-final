@@ -2,29 +2,26 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokémons</title>
   <link rel="stylesheet" href="style.css">
+  <script src="js/main.js" defer></script>
 </head>
 <body>
   <div class="form-container">
     <h1>Pokémons</h1>
     <button onclick="logout()">Sair</button>
-
-    <div id="pokemonList"></div>
   </div>
 
-  <script src="js/main.js"></script>
+  <div id="pokemonList"></div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const usuarioLogado = JSON.parse(localStorage.getItem("logado"));
-
-      if (!usuarioLogado) {
-        alert("Você precisa estar logado para acessar essa página!");
-        window.location.href = "login.html";
-      } else {
-        carregarPokemons(); // chama direto quando a página abre
-      }
+      verificarLogin();
+      carregarPokemons();
     });
   </script>
 </body>
 </html>
+
+
