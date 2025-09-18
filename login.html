@@ -2,24 +2,27 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <link rel="stylesheet" href="style.css">
+  <script src="js/main.js" defer></script>
 </head>
 <body>
   <h1>Login</h1>
-  <form id="loginForm">
-    <label>CPF ou E-mail:</label>
-    <input type="text" id="loginId" required><br>
 
-    <label>Senha:</label>
-    <input type="password" id="loginSenha" required><br>
+  <form onsubmit="login(event)">
+    <label for="cpfEmail">CPF ou E-mail:</label>
+    <input type="text" id="cpfEmail" required>
 
-    <button type="button" onclick="fazerLogin()">Entrar</button>
+    <label for="senha">Senha:</label>
+    <input type="password" id="senha" required>
+
+    <button type="submit" class="btn">Entrar</button>
+    <button type="button" class="btn" onclick="window.location.href='cadastro.html'">
+      Ir para Cadastro
+    </button>
   </form>
-
-  <p><a href="index.html">Voltar ao Cadastro</a></p>
-
-  <script src="js/main.js"></script>
 </body>
 </html>
+
 
