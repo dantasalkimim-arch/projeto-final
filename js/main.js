@@ -1,11 +1,11 @@
 function getDadosFormulario() {
   return {
-    nome: document.getElementById("nome").value,
-    cpf: document.getElementById("cpf").value,
-    email: document.getElementById("email").value,
-    telefone: document.getElementById("telefone").value,
-    endereco: document.getElementById("endereco").value,
-    senha: document.getElementById("senha").value
+    nome: document.getElementById("nome")?.value || "",
+    cpf: document.getElementById("cpf")?.value || "",
+    email: document.getElementById("email")?.value || "",
+    telefone: document.getElementById("telefone")?.value || "",
+    endereco: document.getElementById("endereco")?.value || "",
+    senha: document.getElementById("senha")?.value || ""
   };
 }
 
@@ -91,6 +91,24 @@ function pegarCorPorTipo(tipo) {
   return cores[tipo] || "#ccc";
 }
 
+function verificarLogin() {
+  const usuario = JSON.parse(localStorage.getItem("usuario")) || 
+                  JSON.parse(sessionStorage.getItem("usuario"));
+
+  if (!usuario) {
+    alert("Você precisa estar logado para acessar esta página!");
+    window.location.href = "login.html";
+  }
+}
+
 if (document.getElementById("pokemonList")) {
+  verificarLogin();
   carregarPokemons(pagina);
+}
+
+function logout() {
+  sessionStorage.removeItem("usuario");
+  localStorage.removeItem("usuario");
+  alert("Você saiu do sistema!");
+  window.location.href = "login.html";
 }
