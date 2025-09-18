@@ -1,93 +1,23 @@
-# 📌 Projeto Final – Front-End com JavaScript
+# Projeto Final - Front-End com JavaScript
 
-## 📖 Descrição
-Este projeto foi desenvolvido como **trabalho final do módulo de Front-End com JavaScript**.  
-O objetivo é aplicar conceitos de manipulação do DOM, eventos, armazenamento no navegador e consumo de API.  
+Este é o projeto final da disciplina de Front-End com JavaScript.  
+Aqui a gente fez um sistema simples com **cadastro de usuário, login** e também uma página que consome a **PokéAPI** para listar pokémons.
 
----
+## Funcionalidades
+- Cadastro de usuário
+- Login
+- Salvar dados no navegador (LocalStorage e SessionStorage)
+- Exportar os dados em JSON
+- Listagem de Pokémons usando a PokéAPI
 
-## 🎯 Funcionalidades
-- ✅ **Cadastro de Usuário**  
-  - Validação de campos obrigatórios (Nome, CPF, E-mail, Endereço, Senha).  
-  - Máscaras para CPF e Telefone.  
-  - Preferências de contato (SMS, WhatsApp, E-mail).  
+## Como usar
+Você pode acessar direto pelo GitHub Pages:  
+👉 [Clique aqui para abrir o projeto](https://dantasalkimim-arch.github.io/projeto-final/)
 
-- ✅ **Persistência de Dados**  
-  - Salvar dados no **Session Storage**.  
-  - Salvar dados no **Local Storage**.  
-  - Fazer **download em JSON** dos dados do formulário.  
+Ou baixar o repositório e abrir o arquivo `index.html` no navegador.
 
-- ✅ **Login**  
-  - Autenticação por CPF ou E-mail + Senha.  
-  - Redirecionamento para página restrita após login.  
-
-- ✅ **Página Protegida (Pokémon)**  
-  - Consumo da **PokéAPI**.  
-  - Listagem de Pokémons com nome + sprite.  
-  - Cards coloridos de acordo com o tipo do Pokémon.  
-  - Paginação (20 por vez).  
-  - Proteção: só acessa se estiver logado.  
-
----
-
-## 🛠️ Tecnologias Utilizadas
-- HTML5  
-- CSS3 (Flexbox/Grid)  
-- JavaScript (ES6+)  
-- LocalStorage / SessionStorage  
-- PokéAPI (https://pokeapi.co/)  
-- GitHub Pages  # 📌 Projeto Final – Front-End com JavaScript
-
-## 📖 Descrição
-Este projeto foi desenvolvido como **trabalho final do módulo de Front-End com JavaScript**.  
-O objetivo é aplicar conceitos de **manipulação do DOM, eventos, armazenamento no navegador e consumo de API**.  
-
----
-
-## 🎯 Funcionalidades
-- ✅ **Cadastro de Usuário**  
-  - Validação de campos obrigatórios (Nome, CPF, E-mail, Endereço, Senha).  
-  - Máscaras para CPF e Telefone.  
-  - Preferências de contato (SMS, WhatsApp, E-mail).  
-
-- ✅ **Persistência de Dados**  
-  - Salvar dados no **Session Storage**.  
-  - Salvar dados no **Local Storage**.  
-  - Fazer **download em JSON** dos dados do formulário.  
-
-- ✅ **Login**  
-  - Autenticação por CPF ou E-mail + Senha.  
-  - Redirecionamento para página restrita após login.  
-
-- ✅ **Página Protegida (Pokémon)**  
-  - Consumo da **PokéAPI**.  
-  - Listagem de Pokémons com nome + sprite.  
-  - Cards coloridos de acordo com o tipo do Pokémon.  
-  - Paginação (20 por vez).  
-  - Proteção: só acessa se estiver logado.  
-
----
-
-## 🛠️ Tecnologias Utilizadas
-- HTML5  
-- CSS3 (Flexbox/Grid)  
-- JavaScript (ES6+)  
-- LocalStorage / SessionStorage  
-- PokéAPI (https://pokeapi.co/)  
-- GitHub Pages  
-
----
-
-## 🚀 Como executar
-1. Clone este repositório:  
-   ```bash
-   git clone https://github.com/dantasalkimim-arch/projeto-final.git
-
-
----
-
-## 🚀 Como executar
-1. Clone este repositório:  
-   ```bash
-   git clone https://github.com/dantasalkimim-arch/projeto-final.git
-
+## Integrantes
+- Marco Alkmim  
+- [Nome 2]  
+- [Nome 3]  
+- [Nome 4]  

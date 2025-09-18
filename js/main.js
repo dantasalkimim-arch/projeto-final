@@ -1,4 +1,3 @@
-// ====== Cadastro ======
 function getDadosFormulario() {
   return {
     nome: document.getElementById("nome").value,
@@ -31,7 +30,6 @@ function baixarJSON() {
   link.click();
 }
 
-// ====== Login ======
 function fazerLogin() {
   const loginId = document.getElementById("loginId").value;
   const loginSenha = document.getElementById("loginSenha").value;
@@ -47,7 +45,6 @@ function fazerLogin() {
   }
 }
 
-// ====== PokeAPI ======
 let pagina = 1;
 const limite = 20;
 
@@ -94,7 +91,6 @@ function pegarCorPorTipo(tipo) {
   return cores[tipo] || "#ccc";
 }
 
-// carregar ao abrir a página pokemon
 if (document.getElementById("pokemonList")) {
   carregarPokemons(pagina);
 }
