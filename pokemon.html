@@ -7,20 +7,13 @@
   <link rel="stylesheet" href="style.css">
   <script src="js/main.js" defer></script>
 </head>
-<body>
+<body onload="verificarLogin(); carregarPokemons();">
   <div class="form-container">
     <h1>Pokémons</h1>
     <button onclick="logout()">Sair</button>
   </div>
 
   <div id="pokemonList"></div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      verificarLogin();
-      carregarPokemons();
-    });
-  </script>
 </body>
 </html>
 

@@ -5,15 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projeto Final</title>
   <link rel="stylesheet" href="style.css">
+  <script src="js/main.js" defer></script>
 </head>
 <body>
   <div class="form-container">
     <h1>Bem-vindo</h1>
-    <p>Escolha uma opção para continuar:</p>
+    <p>Digite seu e-mail para continuar:</p>
 
-    <button onclick="window.location.href='cadastro.html'">Cadastro</button>
-    <button onclick="window.location.href='login.html'">Login</button>
+    <form onsubmit="verificarEmail(event)">
+      <input type="email" id="emailEntrada" placeholder="Digite seu e-mail" required>
+      <button type="submit">Avançar</button>
+    </form>
   </div>
 </body>
 </html>
-
